@@ -4,6 +4,9 @@
 
 *.iml
 .idea/
+legacy/
+out/
+*.dat
 
 #################
 ## Eclipse
