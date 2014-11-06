@@ -22,10 +22,17 @@ public class Room implements Serializable {
 
     /*
     todo:
-        inventory
+        items, including an item count (See Inventory.java for an example of item counts)
         NPCs
         Enemies
     */
+
+    public Room(String roomID, String title, String description, Map<String, String> exitMap) {
+        m_roomID = roomID;
+        m_roomTitle = title;
+        m_roomDescription = description;
+        m_exitMap = exitMap;
+    }
 
     //Getters
     public String getRoomID() {

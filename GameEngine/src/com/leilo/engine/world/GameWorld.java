@@ -14,6 +14,14 @@ public class GameWorld implements Serializable {
     private Room m_currentRoom = null;
     //todo add Player
 
+    /**
+     * Constructor
+     */
+    public GameWorld() {
+        m_gameRooms = new HashMap<String, Room>();
+        m_gameRooms.put("CurrentRoom", m_currentRoom);
+    }
+
     //Getters
     public Map<String, Room> getGameRooms() {
         return m_gameRooms;
@@ -30,14 +38,6 @@ public class GameWorld implements Serializable {
 
     public void setCurrentRoom(Room room) {
         m_currentRoom = room;
-    }
-
-    /**
-     * Constructor
-     */
-    public GameWorld() {
-        m_gameRooms = new HashMap<String, Room>();
-        m_gameRooms.put("CurrentLocation", m_currentRoom);
     }
 
     /**

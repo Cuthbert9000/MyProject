@@ -25,7 +25,7 @@ public class PrintUtils {
     /**
      * Returns a | delimited string of the current game location
      */
-    public String getCurrentLocation(Room currentRoom, GameWorld gameWorld) {
+    public String printCurrentLocation(Room currentRoom, GameWorld gameWorld) {
         StringBuilder currentLocationStringBuilder = new StringBuilder();
         //Append the room title
         currentLocationStringBuilder.append("You are in " + currentRoom.getRoomTitle() + "|");
@@ -55,5 +55,4 @@ public class PrintUtils {
         }
         return currentLocationStringBuilder.toString();
     }
-
 }

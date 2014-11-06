@@ -1,6 +1,8 @@
 package com.leilo.engine.utils;
 
-import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.Properties;
 
 /**
@@ -20,11 +22,11 @@ public class PropertyUtils {
         return m_instance;
     }
 
-    private Properties loadPropertyFile(String propertyFile) throws Exception {
-        InputStream inputSteam = PropertyUtils.class.getResourceAsStream(propertyFile);
+    public Properties loadPropertyFile(File propertyFile) throws Exception {
+        BufferedReader propertyReader = new BufferedReader(new FileReader(propertyFile));
         Properties prop = new Properties();
-        prop.load(inputSteam);
-        inputSteam.close();
+        prop.load(propertyReader);
+        propertyReader.close();
         return prop;
     }
 
