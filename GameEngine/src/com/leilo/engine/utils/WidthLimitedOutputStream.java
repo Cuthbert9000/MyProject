@@ -6,14 +6,14 @@ import java.util.StringTokenizer;
 public class WidthLimitedOutputStream {
     // Output stream
     private PrintStream m_out;
-    private int width;
+    private int m_width;
 
     /*
      * WidthLimitedOutputStream constructor
      */
     public WidthLimitedOutputStream(OutputStream out, int width) {
         m_out = new PrintStream (out);
-        this.width = width;
+        m_width = width;
     }
 
     /**
@@ -31,7 +31,7 @@ public class WidthLimitedOutputStream {
             // Get the next token
             String token = tokenizer.nextToken();
             // If word would exceed width limit
-            if (currentWidth + token.length() >= width) {
+            if (currentWidth + token.length() >= m_width) {
                 // Print a newline
                 m_out.println ();
                 currentWidth = 0;
@@ -60,5 +60,9 @@ public class WidthLimitedOutputStream {
 
     public void close() {
         m_out.close();
+    }
+
+    public void updateWidth(int width) {
+        m_width = width;
     }
 }

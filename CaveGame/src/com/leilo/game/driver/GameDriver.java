@@ -1,9 +1,8 @@
 package com.leilo.game.driver;
 
+import com.leilo.engine.items.Equipment;
 import com.leilo.engine.room.Room;
-import com.leilo.engine.utils.MapCreator;
-import com.leilo.engine.utils.PropertyUtils;
-import com.leilo.engine.utils.WidthLimitedOutputStream;
+import com.leilo.engine.utils.*;
 import com.leilo.engine.world.GameWorld;
 
 import java.io.*;
@@ -81,7 +80,23 @@ public class GameDriver {
     }
 
     public void play() {
-
+        String command = null;
+        // Create a BufferedReader
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        for (;;)
+        {
+            // Show location
+            PrintUtils.getInstance().printCurrentRoom(m_game.getCurrentRoom(), m_game, m_output);
+            // Get user input
+            try {
+                command = reader.readLine().trim();
+                m_game = CommandParser.getInstance().parseCommand(m_game, command, m_output);
+                // Print a new line
+                System.out.println();
+                //todo add in handling stuff about game status
+            } catch (Exception e)  {
+                m_output.println("ERROR");
+            }
+        }
     }
-
 }

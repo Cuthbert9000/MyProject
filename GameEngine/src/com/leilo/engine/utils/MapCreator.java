@@ -1,5 +1,7 @@
 package com.leilo.engine.utils;
 
+import com.leilo.engine.items.Inventory;
+import com.leilo.engine.items.Item;
 import com.leilo.engine.room.Room;
 
 import java.text.DateFormat;
@@ -33,7 +35,7 @@ public class MapCreator {
 
     public Map<String, Room> createGameMap(Properties roomProperties, Properties mobProperties, Properties itemProperties, WidthLimitedOutputStream output) {
         String roomListString = roomProperties.getProperty("RoomList");
-        List<String> roomList = Arrays.asList(roomListString.split(","));
+        List<String> roomList = Arrays.asList(roomListString.split("\\|"));
         Map<String, Room> roomMap = new HashMap<String, Room>();
         for(String roomID : roomList) {
             String roomTitle = roomProperties.getProperty(roomID+".title");
@@ -56,7 +58,7 @@ public class MapCreator {
                 continue;
             }
 
-            List<String> exitList = Arrays.asList(roomExits.split(","));
+            List<String> exitList = Arrays.asList(roomExits.split("\\|"));
             Map<String, String> exitMap = new HashMap<String, String>();
 
             for(String exit : exitList) {
@@ -66,11 +68,32 @@ public class MapCreator {
                 exitMap.put(exitDirection, exitRoomID);
             }
 
-            Room tempRoom = new Room(roomID, roomTitle, roomDescription, exitMap);
-
+            Inventory roomInventory = new Inventory(50);
             if(itemExists && itemProperties != null) {
-                //todo add item stuff
+                Map<String, String> tokenNumberToItemRoomDescriptionMap = new HashMap<String, String>();
+                String[] roomItemList = roomProperties.getProperty(roomID + ".items").split("\\|");
+                List<Item> itemList = new ArrayList<Item>();
+                for(String itemProp : roomItemList) {
+                    String itemID;
+                    String tokenNumber = "-1";
+                    if(itemProp.contains("{")) {
+                        int bracketStartIndex = itemProp.indexOf("{");
+                        int bracketEndIndex = itemProp.indexOf("}");
+                        itemID = itemProp.substring(0, bracketStartIndex);
+                        tokenNumber = itemProp.substring(bracketStartIndex + 1, bracketEndIndex);
+                    } else {
+                        itemID = itemProp;
+                    }
+                    Item tempItem = ItemCreator.getInstance().createItem(itemID, itemProperties);
+                    tokenNumberToItemRoomDescriptionMap.put(tokenNumber, tempItem.getRoomDescription());
+                    itemList.add(tempItem);
+                }
+                roomInventory.addItemsToInventory(itemList);
+                roomDescription = replaceDescriptionTokens(roomDescription, tokenNumberToItemRoomDescriptionMap);
             }
+            Room tempRoom = new Room(roomID, roomTitle, roomDescription, exitMap);
+            tempRoom.setRoomInventory(roomInventory);
+
             if(mobExists && mobProperties != null) {
                 //todo add mob stuff
             }
@@ -79,6 +102,15 @@ public class MapCreator {
         return roomMap;
     }
 
-
-
+    private String replaceDescriptionTokens(String roomDescription, Map<String, String> tokenNumberToItemRoomDescriptionMap) {
+        String returnString = roomDescription;
+        while(returnString.contains("{")) {
+            int bracketStartIndex = returnString.indexOf("{");
+            int bracketEndIndex = returnString.indexOf("}");
+            String tokenNumber = returnString.substring(bracketStartIndex + 1, bracketEndIndex);
+            String tokenReplacement = tokenNumberToItemRoomDescriptionMap.get(tokenNumber);
+            returnString = returnString.replace("{" + tokenNumber + "}", tokenReplacement);
+        }
+        return returnString;
+    }
 }

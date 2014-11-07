@@ -1,6 +1,10 @@
 package com.leilo.engine.room;
 
+import com.leilo.engine.items.Inventory;
+import com.leilo.engine.items.Item;
+
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,19 +23,28 @@ public class Room implements Serializable {
     private String m_roomTitle;
     private String m_roomDescription;
     private Map<String, String> m_exitMap; //Map<Direction, RoomID>
+    private Inventory m_roomInventory;
 
     /*
     todo:
-        items, including an item count (See Inventory.java for an example of item counts)
         NPCs
         Enemies
     */
 
     public Room(String roomID, String title, String description, Map<String, String> exitMap) {
+        this(roomID, title, description, exitMap, null);
+    }
+
+    public Room(String roomID, String title, String description, Map<String, String> exitMap, Inventory roomInventory) {
+        this(roomID, title, description, exitMap, roomInventory, null, null);
+    }
+
+    public Room(String roomID, String title, String description, Map<String, String> exitMap, Inventory roomInventory, List<String> sceneryItemIDList, Map<String, Item> sceneryItemIDToItemNameMap) {
         m_roomID = roomID;
         m_roomTitle = title;
         m_roomDescription = description;
         m_exitMap = exitMap;
+        m_roomInventory = roomInventory;
     }
 
     //Getters
@@ -51,6 +64,10 @@ public class Room implements Serializable {
         return m_exitMap;
     }
 
+    public Inventory getRoomInventory() {
+        return m_roomInventory;
+    }
+
     //Setters
     public void setRoomID(String roomID) {
         m_roomID = m_roomID;
@@ -68,6 +85,10 @@ public class Room implements Serializable {
         m_exitMap = exitMap;
     }
 
+    public void setRoomInventory(Inventory roomInventory) {
+        m_roomInventory = roomInventory;
+    }
+
     /**
      * Adds only new exits out of the supplied Map
      */
@@ -82,6 +103,4 @@ public class Room implements Serializable {
     public void addExitToRoom(String exitDirection, String roomID) {
         m_exitMap.put(exitDirection, roomID);
     }
-
-
 }

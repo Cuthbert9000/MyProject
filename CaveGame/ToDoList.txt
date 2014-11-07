@@ -1,9 +1,0 @@
-Characters
-    Player
-    Enemy
-Inventory System
-Items
-    Equipment
-    Consumables
-Map
-

@@ -1,0 +1,24 @@
+PlayerCharacter
+
+Mob
+    mobs will have a "room description" which will be the description of them in the room etc.
+
+Combat Engine
+    In the future, add multi-combatant combat
+
+Items
+    Equipment
+    Consumable
+    in the future: add items in the properties file which have an "alternateid" field, which can be utilized to have different room descriptions for the same item
+
+ Inventory
+
+ EquipmentManager
+
+ Map
+    Room
+
+
+items: add room specific names
+in rooms, add tokens to descriptions which can be replaced with scenery object names & item object names specific to being in the description. we can also check if the token exists before printing,
+    allowing for dynamic descriptions, changing as items are taken out of rooms

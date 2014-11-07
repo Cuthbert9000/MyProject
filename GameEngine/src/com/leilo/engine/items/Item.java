@@ -9,14 +9,22 @@ public class Item implements Serializable {
 
     private String m_itemID;
     private String m_name;
-    private String m_description;
+    private String m_itemDescription;
+    private String m_roomDescription;
+    private int m_itemType;
 
     public Item() {}
 
-    public Item(String itemID, String name, String description) {
+    public Item(String itemID, String name, String itemDescription, int itemType) {
+        this(itemID, name, itemDescription, null, itemType);
+    }
+
+    public Item(String itemID, String name, String itemDescription, String roomDescription, int itemType) {
         m_itemID = itemID;
         m_name = name;
-        m_description = description;
+        m_itemDescription = itemDescription;
+        m_roomDescription = roomDescription;
+        m_itemType = itemType;
     }
 
     public void setItemID(String itemID) {
@@ -27,8 +35,16 @@ public class Item implements Serializable {
         m_name = name;
     }
 
-    public void setDescription(String description) {
-        m_description = description;
+    public void setRoomDescription(String roomDescription) {
+        m_roomDescription = roomDescription;
+    }
+
+    public void setItemDescription(String itemDescription) {
+        m_itemDescription = itemDescription;
+    }
+
+    public void setItemType(int itemType) {
+        m_itemType = itemType;
     }
 
     public String getItemID() {
@@ -39,7 +55,15 @@ public class Item implements Serializable {
         return m_name;
     }
 
-    public String getDescription() {
-        return m_description;
+    public String getRoomDescription() {
+        return m_roomDescription;
+    }
+
+    public String getItemDescription() {
+        return m_itemDescription;
+    }
+
+    public int getItemType() {
+        return m_itemType;
     }
 }
