@@ -36,6 +36,9 @@ public class WidthLimitedOutputStream {
                 m_out.println ();
                 currentWidth = 0;
             }
+            if(token.equals("&nbsp;")) {
+                token = "";
+            }
             // Print token
             m_out.print (token + " ");
             currentWidth += token.length();
