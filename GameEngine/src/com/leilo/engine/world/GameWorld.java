@@ -12,7 +12,7 @@ public class GameWorld implements Serializable {
 
     private Map<String, Room> m_gameRooms;
     private Room m_currentRoom = null;
-    private int m_gameStatus; //Status integer used to indicate the current status of the game after a command has been entered and processed
+    private boolean m_activeGame = true;
     //todo add Player
 
     /**
@@ -21,7 +21,6 @@ public class GameWorld implements Serializable {
     public GameWorld() {
         m_gameRooms = new HashMap<String, Room>();
         m_gameRooms.put("CurrentRoom", m_currentRoom);
-        m_gameStatus = 0;
     }
 
     //Getters
@@ -33,8 +32,8 @@ public class GameWorld implements Serializable {
         return m_currentRoom;
     }
 
-    public int getGameStatus() {
-        return m_gameStatus;
+    public boolean isGameActive() {
+        return m_activeGame;
     }
 
     //Setters
@@ -46,8 +45,8 @@ public class GameWorld implements Serializable {
         m_currentRoom = room;
     }
 
-    public void setGameStatus(int gameStatus) {
-        m_gameStatus = gameStatus;
+    public void setGameStatus(boolean gameStatus) {
+        m_activeGame = gameStatus;
     }
 
     /**

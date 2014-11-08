@@ -2,21 +2,49 @@ package com.leilo.engine.utils;
 
 import com.leilo.engine.world.GameWorld;
 
+import java.util.*;
+
 /**
  *
  */
 public class CommandParser {
     /*
     Movement Commands:
-        - Go (g) [North(N/n)|East(E/e)|South(S/s)|West(W/w)]
-        - North(N/n)
-        - East(E/e)
-        - South(S/s)
-        - West(W/w)
+        - go [north(n)|east(e)|south(s)|west(w)]
+        - north(n)
+        - east(e)
+        - south(s)
+        - west(w)
     Item Commands:
         - Get [Item Name]
      */
-    
+
+    //Command Constants
+    private final List<String> NORTH = new ArrayList<String>() {{
+        add("north");
+        add("n");
+    }};
+    private final List<String> EAST = new ArrayList<String>() {{
+        add("east");
+        add("e");
+    }};
+    private final List<String> SOUTH = new ArrayList<String>() {{
+        add("south");
+        add("s");
+    }};
+    private final List<String> WEST = new ArrayList<String>() {{
+        add("west");
+        add("w");
+    }};
+
+    private final List<String> DIRECTIONS = new ArrayList<String>() {{
+        addAll(NORTH);
+        addAll(EAST);
+        addAll(SOUTH);
+        addAll(WEST);
+    }};
+
+
     private static CommandParser m_instance = null;
 
     protected CommandParser() {
@@ -29,10 +57,38 @@ public class CommandParser {
         return m_instance;
     }
 
-    public GameWorld parseCommand(GameWorld gameWorld, String command, WidthLimitedOutputStream output) {
+    private List<String> getCommands(String[] commandTokens) {
+        List<String> commands = new ArrayList<String>();
+        for(String command : commandTokens) {
+            if(!command.isEmpty()) {
+                commands.add(command);
+            }
+        }
+        return commands;
+    }
 
+    public GameWorld parseCommand(GameWorld gameWorld, String input, WidthLimitedOutputStream output) {
         GameWorld tempWorld = gameWorld;
+        input = input.trim().toLowerCase();
+        List<String> commands = getCommands(input.split(" "));
+        String command = commands.get(0);
+        if(command.equals("go")) {
+            tempWorld = processGoCommand(tempWorld, commands.get(1));
+        }
+        if(DIRECTIONS.contains(command)) {
+            tempWorld = processGoCommand(tempWorld, commands.get(1));
+        } else if(command.equals("get")) {
 
+        } else if(command.equals("equip")) {
+
+        } else if(command.equals("attack")) {
+
+        }
+        return tempWorld;
+    }
+
+    private GameWorld processGoCommand(GameWorld gameWorld, String direction) {
+        GameWorld tempWorld = gameWorld;
 
         return tempWorld;
     }

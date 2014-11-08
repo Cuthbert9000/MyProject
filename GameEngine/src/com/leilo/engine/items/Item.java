@@ -20,10 +20,10 @@ public class Item implements Serializable {
     }
 
     public Item(String itemID, String name, String itemDescription, String roomDescription, int itemType) {
-        m_itemID = itemID;
-        m_name = name;
-        m_itemDescription = itemDescription;
-        m_roomDescription = roomDescription;
+        m_itemID = itemID.trim();
+        m_name = name.trim();
+        m_itemDescription = itemDescription.trim();
+        m_roomDescription = roomDescription == null ? roomDescription : roomDescription.trim();
         m_itemType = itemType;
     }
 

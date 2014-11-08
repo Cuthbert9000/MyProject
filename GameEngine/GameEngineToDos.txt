@@ -9,16 +9,16 @@ Combat Engine
 Items
     Equipment
     Consumable
-    in the future: add items in the properties file which have an "alternateid" field, which can be utilized to have different room descriptions for the same item
+    ehhh maybe not on this one//in the future: add items in the properties file which have an "alternateid" field, which can be utilized to have different room descriptions for the same item
 
- Inventory
+ Inventory [PRETTY MUCH IMPLEMENTED]
 
  EquipmentManager
 
- Map
-    Room
+ Map [PRETTY MUCH IMPLEMENTED]
+    Room [PRETTY MUCH IMPLEMENTED]
 
 
-items: add room specific names
+items: add room specific names [COMPLETE]
 in rooms, add tokens to descriptions which can be replaced with scenery object names & item object names specific to being in the description. we can also check if the token exists before printing,
-    allowing for dynamic descriptions, changing as items are taken out of rooms
+    allowing for dynamic descriptions, changing as items are taken out of rooms [COMPLETE]

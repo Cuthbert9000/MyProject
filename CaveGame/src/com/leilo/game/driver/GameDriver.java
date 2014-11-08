@@ -83,7 +83,7 @@ public class GameDriver {
         String command = null;
         // Create a BufferedReader
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        for (;;)
+        while(m_game.isGameActive())
         {
             // Show location
             PrintUtils.getInstance().printCurrentRoom(m_game.getCurrentRoom(), m_game, m_output);
@@ -93,7 +93,6 @@ public class GameDriver {
                 m_game = CommandParser.getInstance().parseCommand(m_game, command, m_output);
                 // Print a new line
                 System.out.println();
-                //todo add in handling stuff about game status
             } catch (Exception e)  {
                 m_output.println("ERROR");
             }

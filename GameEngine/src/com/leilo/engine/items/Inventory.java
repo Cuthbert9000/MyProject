@@ -1,8 +1,5 @@
 package com.leilo.engine.items;
 
-import com.leilo.engine.items.Equipment;
-import com.leilo.engine.items.Item;
-
 import java.io.Serializable;
 import java.util.*;
 
@@ -18,6 +15,9 @@ public class Inventory implements Serializable {
     private Map<Integer, List<String>> m_equipmentSlotToItemIDMap; //Map<Item Type, List<ItemID>>
     private List<String> m_itemList; //All ItemIDs in the Inventory
     private int m_inventorySize;
+
+    //The following variables are used for display purposes
+    private int m_maxNameLength = 10;
 
     public Inventory() {
         this(25);
@@ -72,6 +72,9 @@ public class Inventory implements Serializable {
         return m_equipmentSlotToItemIDMap;
     }
 
+    public int getMaxNameLength() {
+        return m_maxNameLength;
+    }
 
     public String getItemNameByItemID(String itemID) {
         return m_itemNameMap.get(itemID);
@@ -85,9 +88,16 @@ public class Inventory implements Serializable {
         return m_itemList.isEmpty();
     }
 
+    public boolean addItemToInventory(Item item) {
+        if(item == null) {
+            return false;
+        }
+        return addItemToInventoryByCount(item, 1);
+    }
+
     public void addItemsToInventory(List<Item> items) {
         for(Item item : items) {
-            addItemToInventory(item, 1);
+            addItemToInventoryByCount(item, 1);
         }
     }
 
@@ -95,7 +105,7 @@ public class Inventory implements Serializable {
      * Attempts to add the item to the player's inventory
      * @return true == success | false == failure
      */
-    public boolean addItemToInventory(Item item, int itemCount) {
+    public boolean addItemToInventoryByCount(Item item, int itemCount) {
         String itemID = item.getItemID();
         if(m_itemList.contains(itemID)) {
             int existingCount = m_itemCountMap.get(itemID);
@@ -141,6 +151,15 @@ public class Inventory implements Serializable {
                         m_equipmentSlotToItemIDMap.put(equipmentSlot, itemList);
                         break;
                 }
+                //The follow is for display purposes
+                int itemNameLength = item.getName().length();
+                if(itemNameLength > m_maxNameLength) {
+                    m_maxNameLength = itemNameLength;
+                    if(m_maxNameLength % 2 != 0) {
+                        m_maxNameLength++;
+                    }
+                }
+
                 return true;
             } else {
                 //Inventory full, return false
@@ -162,17 +181,17 @@ public class Inventory implements Serializable {
     }
 
     public Item getItemFromInventory(String itemID) {
-        return getItemsFromInventory(itemID, 1);
+        return getItemFromInventoryByCount(itemID, 1);
     }
 
-    public Item getItemsFromInventory(String itemID, int itemCount) {
+    public Item getItemFromInventoryByCount(String itemID, int itemCount) {
         if (canItemBeTakenFromInventory(itemID, itemCount)) {
             int existingCount = m_itemCountMap.get(itemID);
             Item tempItem = m_itemMap.get(itemID);
             if(existingCount-itemCount == 0) {
                 completelyRemoveItemFromInventory(itemID);
             } else {
-                partiallyRemoveItemFromInventory(itemID, itemCount);
+                removeItemFromInventoryByCount(itemID, itemCount);
             }
             return tempItem;
         }
@@ -201,7 +220,7 @@ public class Inventory implements Serializable {
         }
     }
 
-    public void partiallyRemoveItemFromInventory(String itemID, int itemCount) {
+    public void removeItemFromInventoryByCount(String itemID, int itemCount) {
         int existingCount = m_itemCountMap.get(itemID);
         int newCount = existingCount - itemCount;
         m_itemCountMap.put(itemID, newCount);

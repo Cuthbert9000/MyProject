@@ -40,9 +40,9 @@ public class Room implements Serializable {
     }
 
     public Room(String roomID, String title, String description, Map<String, String> exitMap, Inventory roomInventory, List<String> sceneryItemIDList, Map<String, Item> sceneryItemIDToItemNameMap) {
-        m_roomID = roomID;
-        m_roomTitle = title;
-        m_roomDescription = description;
+        m_roomID = roomID.trim();
+        m_roomTitle = title.trim();
+        m_roomDescription = description.trim();
         m_exitMap = exitMap;
         m_roomInventory = roomInventory;
     }
