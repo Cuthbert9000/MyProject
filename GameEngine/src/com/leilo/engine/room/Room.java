@@ -22,6 +22,7 @@ public class Room implements Serializable {
     private String m_roomID;
     private String m_roomTitle;
     private String m_roomDescription;
+    private Map<String, String> m_tokenNumberToItemIDMap; //Map<Token Number String, ItemID>
     private Map<String, String> m_exitMap; //Map<Direction, RoomID>
     private Inventory m_roomInventory;
 
@@ -40,9 +41,14 @@ public class Room implements Serializable {
     }
 
     public Room(String roomID, String title, String description, Map<String, String> exitMap, Inventory roomInventory, List<String> sceneryItemIDList, Map<String, Item> sceneryItemIDToItemNameMap) {
+        this(roomID, title, description, exitMap, roomInventory, null, null, null);
+    }
+
+    public Room(String roomID, String title, String description, Map<String, String> exitMap, Inventory roomInventory, List<String> sceneryItemIDList, Map<String, Item> sceneryItemIDToItemNameMap, Map<String, String> tokenNumberToItemIDMap) {
         m_roomID = roomID.trim();
         m_roomTitle = title.trim();
         m_roomDescription = description.trim();
+        m_tokenNumberToItemIDMap = tokenNumberToItemIDMap;
         m_exitMap = exitMap;
         m_roomInventory = roomInventory;
     }
@@ -58,6 +64,10 @@ public class Room implements Serializable {
 
     public String getRoomDescription() {
         return m_roomDescription;
+    }
+
+    public Map<String, String> getTokenNumberToItemIDMap() {
+        return m_tokenNumberToItemIDMap;
     }
 
     public Map<String, String> getExitMap() {
@@ -79,6 +89,10 @@ public class Room implements Serializable {
 
     public void setRoomDescription(String roomDescription) {
         m_roomDescription = roomDescription;
+    }
+
+    public void setTokenNumberToItemIDMap(Map<String, String> tokenNumberToItemIDMap) {
+        m_tokenNumberToItemIDMap = tokenNumberToItemIDMap;
     }
 
     public void setExitMap(Map<String, String> exitMap) {

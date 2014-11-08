@@ -28,10 +28,10 @@ public class TestDriver {
 
 
     public static void main(String[] args) {
-        WidthLimitedOutputStream outputStream = new WidthLimitedOutputStream(System.out, 80);
+        WidthLimitedOutputStream outputStream = new WidthLimitedOutputStream(System.out, 60);
         //testPlayerCharacter(outputStream);
-        //testPrintUtils(outputStream);
-
+        testPrintUtils(outputStream);
+        outputStream.close();
     }
 
     public static void testPlayerCharacter(WidthLimitedOutputStream outputStream) {
@@ -90,10 +90,10 @@ public class TestDriver {
 
     private static void testPrintUtils(WidthLimitedOutputStream outputStream) {
         //Test Printing of Current Location
-        //printCurrentRoomTest(outputStream);
+        printCurrentRoomTest(outputStream);
         //outputStream.println("*******************************************************");
         //Test Printing of Inventory
-        printInventoryTest(outputStream);
+        //printInventoryTest(outputStream);
     }
 
     private static boolean printCurrentRoomTest(WidthLimitedOutputStream outputStream) {

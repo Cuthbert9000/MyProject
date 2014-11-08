@@ -1,5 +1,6 @@
 package com.leilo.engine.utils;
 
+import com.leilo.engine.room.Room;
 import com.leilo.engine.world.GameWorld;
 
 import java.util.*;
@@ -44,6 +45,13 @@ public class CommandParser {
         addAll(WEST);
     }};
 
+    private final List<List<String>> DIRECTION_LISTS = new ArrayList<List<String>>() {{
+        add(NORTH);
+        add(EAST);
+        add(SOUTH);
+        add(WEST);
+    }};
+
 
     private static CommandParser m_instance = null;
 
@@ -73,10 +81,13 @@ public class CommandParser {
         List<String> commands = getCommands(input.split(" "));
         String command = commands.get(0);
         if(command.equals("go")) {
-            tempWorld = processGoCommand(tempWorld, commands.get(1));
+            if(commands.size() < 2) {
+                output.println("You need to provide a direction!");
+            }
+            command = commands.get(1);
         }
         if(DIRECTIONS.contains(command)) {
-            tempWorld = processGoCommand(tempWorld, commands.get(1));
+            tempWorld = processGoCommand(tempWorld, commands.get(1), output);
         } else if(command.equals("get")) {
 
         } else if(command.equals("equip")) {
@@ -87,9 +98,19 @@ public class CommandParser {
         return tempWorld;
     }
 
-    private GameWorld processGoCommand(GameWorld gameWorld, String direction) {
+    private GameWorld processGoCommand(GameWorld gameWorld, String direction, WidthLimitedOutputStream outputStream) {
         GameWorld tempWorld = gameWorld;
-
+        Room currentRoom = tempWorld.getCurrentRoom();
+        String newRoomID = null;
+        Map<String, String> currentRoomExitMap = currentRoom.getExitMap();
+        for(List<String> directionList : DIRECTION_LISTS) {
+            if(directionList.contains(direction)) {
+                newRoomID = currentRoomExitMap.get(directionList.get(0));
+            }
+        }
+        if(newRoomID != null) {
+            tempWorld.updateCurrentRoom(newRoomID);
+        }
         return tempWorld;
     }
 }

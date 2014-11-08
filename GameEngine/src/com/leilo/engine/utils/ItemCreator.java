@@ -38,16 +38,16 @@ public class ItemCreator {
     public Item createItem(String itemID, Properties itemProperties) {
         String itemName = itemProperties.getProperty(itemID + ".name");
         String itemDescription = itemProperties.getProperty(itemID + ".itemdescription");
-        String roomDescription = itemProperties.getProperty(itemID + ".roomdescriptions");
+        String roomDescriptions = itemProperties.getProperty(itemID + ".roomdescriptions");
         int itemType = Integer.parseInt(itemProperties.getProperty(itemID + ".itemtype"));
         switch (itemType) {
             case 0:
-                return new Consumable(itemID, itemName, itemDescription, roomDescription);
+                return new Consumable(itemID, itemName, itemDescription, roomDescriptions);
             case 1:
                 int equipmentSlot = Integer.parseInt(itemProperties.getProperty(itemID + ".equipmentslot"));
-                return new Equipment(itemID, itemName, itemDescription, roomDescription, equipmentSlot);
+                return new Equipment(itemID, itemName, itemDescription, roomDescriptions, equipmentSlot);
             case 2:
-                return new Item(itemID, itemName, itemDescription, roomDescription, 2);
+                return new Item(itemID, itemName, itemDescription, roomDescriptions, 2);
             default:
                 return null;
         }

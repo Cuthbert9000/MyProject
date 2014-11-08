@@ -180,6 +180,10 @@ public class Inventory implements Serializable {
         return false;
     }
 
+    public Item getItemCopy(String itemID) {
+        return m_itemMap.get(itemID);
+    }
+
     public Item getItemFromInventory(String itemID) {
         return getItemFromInventoryByCount(itemID, 1);
     }

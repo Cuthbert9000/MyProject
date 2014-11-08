@@ -2,9 +2,11 @@ package com.leilo.engine.utils;
 
 import com.leilo.engine.items.Equipment;
 import com.leilo.engine.items.Inventory;
+import com.leilo.engine.items.Item;
 import com.leilo.engine.room.Room;
 import com.leilo.engine.world.GameWorld;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +28,13 @@ public class PrintUtils {
     private final String HANDS = "***Hands:";
     private final String LEGS = "***Legs:";
     private final String FEET = "***Feet:";
+    //Direction Constants
+    private final List<String> DIRECTIONS = new ArrayList<String>() {{
+        add(0, "north");
+        add(1, "east");
+        add(2, "south");
+        add(3, "west");
+    }};
 
     protected PrintUtils() {
         // Exists only to defeat instantiation.
@@ -37,6 +46,48 @@ public class PrintUtils {
         return m_instance;
     }
 
+    public String toMixedCase(String str) {
+        if(str.isEmpty()) {
+            return str;
+        }
+        if(str.length() == 1) {
+            return str.toUpperCase();
+        }
+        String firstLetter = str.substring(0, 1);
+        firstLetter = firstLetter.toUpperCase();
+        return firstLetter + str.substring(1);
+    }
+
+    private String addItemsToDescription(String description, Room currentRoom) {
+        Inventory roomInventory = currentRoom.getRoomInventory();
+        List<String> itemIDList = roomInventory.getItemList(); //Used to keep track of which items have been printed
+        Map<String, String> tokenNumberToItemIDMap = currentRoom.getTokenNumberToItemIDMap();
+        String returnString = description;
+        while(returnString.contains("{")) {
+            int bracketStartIndex = returnString.indexOf("{");
+            int bracketEndIndex = returnString.indexOf("}");
+            String tokenNumber = returnString.substring(bracketStartIndex + 1, bracketEndIndex);
+            String tokenReplacement = "";
+            if(tokenNumberToItemIDMap == null) {
+                returnString = returnString.replace("{" + tokenNumber + "}", tokenReplacement);
+                continue;
+            }
+            String itemID = tokenNumberToItemIDMap.get(tokenNumber);
+            if(roomInventory.doesInventoryContainItem(itemID)) {
+                Item item = roomInventory.getItemCopy(itemID);
+                tokenReplacement = item.getRoomDescriptionsMap().get(currentRoom.getRoomID()) + " ";
+                itemIDList.remove(itemID);
+            }
+            returnString = returnString.replace("{" + tokenNumber + "}", tokenReplacement);
+        }
+        //Add general item descriptions for other items located in the room
+        for(String itemID : itemIDList) {
+            String itemDescription = "There is a " + roomInventory.getItemCopy(itemID).getName() + " lying on the ground. ";
+            returnString = returnString + itemDescription;
+        }
+        return returnString;
+    }
+
     /**
      * Returns a | delimited string of the current game location
      */
@@ -44,28 +95,19 @@ public class PrintUtils {
         //Print the room title
         outputStream.println("You are in " + currentRoom.getRoomTitle());
         //Print the room description
-        outputStream.println(currentRoom.getRoomDescription());
+        String description = addItemsToDescription(currentRoom.getRoomDescription(), currentRoom);
+        outputStream.println(description);
         //todo print mobs
         //todo print items
         //Print the room exits
         outputStream.println("Exits:");
         Map<String, String> currentRoomExitMap = currentRoom.getExitMap();
         String exitRoomID;
-        if(currentRoomExitMap.containsKey("North")) {
-            exitRoomID = currentRoomExitMap.get("North");
-            outputStream.println("North: " + gameWorld.getRoomByID(exitRoomID).getRoomTitle());
-        }
-        if(currentRoomExitMap.containsKey("East")) {
-            exitRoomID = currentRoomExitMap.get("East");
-            outputStream.println("East: " + gameWorld.getRoomByID(exitRoomID).getRoomTitle());
-        }
-        if(currentRoomExitMap.containsKey("South")) {
-            exitRoomID = currentRoomExitMap.get("South");
-            outputStream.println("South: " + gameWorld.getRoomByID(exitRoomID).getRoomTitle());
-        }
-        if(currentRoomExitMap.containsKey("West")) {
-            exitRoomID = currentRoomExitMap.get("West");
-            outputStream.println("West: " + gameWorld.getRoomByID(exitRoomID).getRoomTitle());
+        for(String direction : DIRECTIONS) {
+            if(currentRoomExitMap.containsKey(direction)) {
+                exitRoomID = currentRoomExitMap.get(direction);
+                outputStream.println(toMixedCase(direction) + ": " + gameWorld.getRoomByID(exitRoomID).getRoomTitle());
+            }
         }
     }
 

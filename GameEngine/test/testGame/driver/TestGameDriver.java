@@ -19,8 +19,8 @@ import java.util.Properties;
  */
 public class TestGameDriver {
     private String m_testFile = "./test/testGame/testSaves/testGame.dat";
-    private File m_mapPropertiesFile = new File("./test/testGame/properties/TestGameMap.properties");
-    private File m_itemPropertiesFile = new File("./test/testGame/properties/TestGameItems.properties");
+    private File m_mapPropertiesFile = new File("./test/resources/properties/TestMap.properties");
+    private File m_itemPropertiesFile = new File("./test/resources/properties/TestItems.properties");
     //todo add this nonsense private File m_mobPropertiesFile = new File("./test/resources/properties/TestMobs.properties");
     private Map<String, Room> m_gameMap;
     private GameWorld m_game;
@@ -30,7 +30,7 @@ public class TestGameDriver {
     transient private WidthLimitedOutputStream m_output;
 
     public TestGameDriver() {
-        m_output = new WidthLimitedOutputStream(System.out, 80);
+        m_output = new WidthLimitedOutputStream(System.out, 60);
         try {
             init();
         } catch (Exception e) {
@@ -39,8 +39,15 @@ public class TestGameDriver {
         }
     }
 
+    private void shutdown() {
+        m_output.close();
+
+    }
+
     public static void main(String[] args) {
-        new TestGameDriver().play();
+        TestGameDriver testDriver = new TestGameDriver();
+        testDriver.play();
+        testDriver.shutdown();
     }
 
     public void init() throws Exception {
@@ -57,7 +64,7 @@ public class TestGameDriver {
         m_game = new GameWorld();
         m_game.addRoomsToGame(m_gameMap);
         //m_game.addPlayerCharacter(m_player);
-        m_game.setCurrentRoom(m_gameMap.get("testroom1"));
+        m_game.setCurrentRoom(m_gameMap.get(roomProperties.getProperty("StartingRoom")));
 
     }
 
@@ -77,18 +84,26 @@ public class TestGameDriver {
         String command = null;
         // Create a BufferedReader
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        //Show initial location
+        PrintUtils.getInstance().printCurrentRoom(m_game.getCurrentRoom(), m_game, m_output);
+        Room currentRoom = m_game.getCurrentRoom();
         while(m_game.isGameActive())
         {
-            // Show location
-            PrintUtils.getInstance().printCurrentRoom(m_game.getCurrentRoom(), m_game, m_output);
-            m_output.println();
+            if(currentRoom != m_game.getCurrentRoom()) {
+                PrintUtils.getInstance().printCurrentRoom(m_game.getCurrentRoom(), m_game, m_output);
+                currentRoom = m_game.getCurrentRoom();
+            }
             try {
                 // Get user input
                 command = reader.readLine().trim();
+                if(command.isEmpty()) {
+                    continue;
+                }
                 m_game = CommandParser.getInstance().parseCommand(m_game, command, m_output);
                 m_output.println();
             } catch (Exception e)  {
                 m_output.println("ERROR");
+                return;
             }
         }
     }

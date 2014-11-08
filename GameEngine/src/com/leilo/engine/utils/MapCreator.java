@@ -69,8 +69,9 @@ public class MapCreator {
             }
 
             Inventory roomInventory = new Inventory(50);
+            Map<String, String> tokenNumberToItemID = null;
             if(itemExists && itemProperties != null) {
-                Map<String, String> tokenNumberToItemRoomDescriptionMap = new HashMap<String, String>();
+                tokenNumberToItemID = new HashMap<String, String>();
                 String[] roomItemList = roomProperties.getProperty(roomID + ".items").split("\\|");
                 List<Item> itemList = new ArrayList<Item>();
                 for(String itemProp : roomItemList) {
@@ -81,18 +82,18 @@ public class MapCreator {
                         int bracketEndIndex = itemProp.indexOf("}");
                         itemID = itemProp.substring(0, bracketStartIndex);
                         tokenNumber = itemProp.substring(bracketStartIndex + 1, bracketEndIndex);
+                        tokenNumberToItemID.put(tokenNumber, itemID);
                     } else {
                         itemID = itemProp;
                     }
                     Item tempItem = ItemCreator.getInstance().createItem(itemID, itemProperties);
-                    tokenNumberToItemRoomDescriptionMap.put(tokenNumber, tempItem.getRoomDescription());
                     itemList.add(tempItem);
                 }
                 roomInventory.addItemsToInventory(itemList);
-                roomDescription = replaceDescriptionTokens(roomDescription, tokenNumberToItemRoomDescriptionMap);
             }
             Room tempRoom = new Room(roomID, roomTitle, roomDescription, exitMap);
             tempRoom.setRoomInventory(roomInventory);
+            tempRoom.setTokenNumberToItemIDMap(tokenNumberToItemID);
 
             if(mobExists && mobProperties != null) {
                 //todo add mob stuff
@@ -102,15 +103,4 @@ public class MapCreator {
         return roomMap;
     }
 
-    private String replaceDescriptionTokens(String roomDescription, Map<String, String> tokenNumberToItemRoomDescriptionMap) {
-        String returnString = roomDescription;
-        while(returnString.contains("{")) {
-            int bracketStartIndex = returnString.indexOf("{");
-            int bracketEndIndex = returnString.indexOf("}");
-            String tokenNumber = returnString.substring(bracketStartIndex + 1, bracketEndIndex);
-            String tokenReplacement = tokenNumberToItemRoomDescriptionMap.get(tokenNumber);
-            returnString = returnString.replace("{" + tokenNumber + "}", tokenReplacement);
-        }
-        return returnString;
-    }
 }

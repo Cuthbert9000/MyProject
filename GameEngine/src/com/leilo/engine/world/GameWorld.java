@@ -1,5 +1,6 @@
 package com.leilo.engine.world;
 
+import com.leilo.engine.characters.PlayerCharacter;
 import com.leilo.engine.room.Room;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -11,17 +12,27 @@ import java.util.Map;
 public class GameWorld implements Serializable {
 
     private Map<String, Room> m_gameRooms;
-    private Room m_currentRoom = null;
+    private Room m_currentRoom;
     private boolean m_activeGame = true;
-    //todo add Player
+    private PlayerCharacter m_player;
 
     /**
      * Constructor
      */
     public GameWorld() {
-        m_gameRooms = new HashMap<String, Room>();
-        m_gameRooms.put("CurrentRoom", m_currentRoom);
+        this(new HashMap<String, Room>(), null);
     }
+
+    public GameWorld(Map<String, Room> gameRooms, Room currentRoom) {
+        this(gameRooms, currentRoom, new PlayerCharacter(currentRoom));
+    }
+
+    public GameWorld(Map<String, Room> gameRooms, Room currentRoom, PlayerCharacter player) {
+        m_gameRooms = gameRooms;
+        m_currentRoom = currentRoom;
+        m_player = player;
+    }
+
 
     //Getters
     public Map<String, Room> getGameRooms() {
@@ -30,6 +41,10 @@ public class GameWorld implements Serializable {
 
     public Room getCurrentRoom() {
         return m_currentRoom;
+    }
+
+    public PlayerCharacter getPlayer() {
+        return m_player;
     }
 
     public boolean isGameActive() {
@@ -47,6 +62,10 @@ public class GameWorld implements Serializable {
 
     public void setGameStatus(boolean gameStatus) {
         m_activeGame = gameStatus;
+    }
+
+    public void setPlayer(PlayerCharacter player) {
+        m_player = player;
     }
 
     /**
@@ -72,5 +91,9 @@ public class GameWorld implements Serializable {
         return m_gameRooms.get(roomID);
     }
 
-
+    public void updateCurrentRoom(String newRoomID) {
+        Room newRoom = m_gameRooms.get(newRoomID);
+        m_player.setCurrentRoom(newRoom);
+        m_currentRoom = newRoom;
+    }
 }

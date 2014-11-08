@@ -23,8 +23,8 @@ public class Equipment extends Item implements Serializable {
         this(itemID, name, itemDescription, null, equipmentSlot);
     }
 
-    public Equipment(String itemID, String name, String itemDescription, String roomDescription, int equipmentSlot) {
-        super(itemID, name, itemDescription, roomDescription, 1);
+    public Equipment(String itemID, String name, String itemDescription, String roomDescriptions, int equipmentSlot) {
+        super(itemID, name, itemDescription, roomDescriptions, 1);
         m_equipmentSlot = equipmentSlot;
     }
 

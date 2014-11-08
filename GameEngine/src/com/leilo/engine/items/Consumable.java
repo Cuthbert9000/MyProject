@@ -14,7 +14,7 @@ public class Consumable extends Item implements Serializable {
         this(itemID, name, itemDescription, null);
     }
 
-    public Consumable(String itemID, String name, String itemDescription, String roomDescription) {
-        super(itemID, name, itemDescription, roomDescription, 0);
+    public Consumable(String itemID, String name, String itemDescription, String roomDescriptions) {
+        super(itemID, name, itemDescription, roomDescriptions, 0);
     }
 }
