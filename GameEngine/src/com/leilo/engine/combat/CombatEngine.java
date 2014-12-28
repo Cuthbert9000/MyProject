@@ -1,5 +1,7 @@
 package com.leilo.engine.combat;
 
+import com.leilo.engine.characters.PlayerCharacter;
+
 /**
  * Engine to run combat
  */
@@ -16,7 +18,5 @@ public class CombatEngine {
         }
         return m_instance;
     }
-
-
 
 }

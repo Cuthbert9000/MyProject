@@ -58,7 +58,7 @@ public class TestGameDriver {
 
         //Create the Player
         m_player = new PlayerCharacter("TestPlayer", 100, m_gameMap.get("testroom1"));
-        m_player.addItemsToPlayerInventory(createItemList());
+        m_player.addItemsToInventory(createItemList());
 
         //Create the game World
         m_game = new GameWorld();
